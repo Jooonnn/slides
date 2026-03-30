@@ -135,6 +135,20 @@
   .compare-table td:first-child { font-weight: 600; color: var(--gray); }
   .compare-table tr:last-child td { border-bottom: none; }
 
+  /* Expandable table rows */
+  .expandable-row { cursor: pointer; transition: background 0.2s; }
+  .expandable-row:hover { background: #f8f4f0; }
+  .expandable-row td:last-child::after { content: ' ▸'; color: var(--accent); font-size: 11px; transition: transform 0.2s; }
+  .expandable-row.open td:last-child::after { content: ' ▾'; }
+  .expand-detail { display: none; }
+  .expand-detail.open { display: table-row; }
+  .expand-detail td { padding: 0 !important; border-bottom: 1px solid #f0f0f0 !important; }
+  .expand-content { background: #faf8f6; padding: 12px 16px; border-left: 3px solid var(--accent); }
+  .expand-company { font-size: 12px; line-height: 1.7; color: var(--dark); margin-bottom: 8px; }
+  .expand-company:last-child { margin-bottom: 0; }
+  .expand-company strong { color: var(--accent); }
+  .expand-founder { display: block; margin-top: 2px; color: var(--gray); font-size: 11px; }
+
   /* Trend slide thesis */
   .trend-thesis { font-size: 18px; font-weight: 700; color: var(--accent); line-height: 1.5; margin-bottom: 20px; padding-left: 16px; border-left: 4px solid var(--accent); }
 
@@ -252,105 +266,317 @@
   </div>
 
   <!-- SLIDE 4: 数据总览 -->
-  <div class="slide slide-content" data-index="3" style="padding:40px 70px">
-    <div class="slide-header" style="margin-bottom:24px">
+  <div class="slide slide-content" data-index="3" style="padding:28px 60px;overflow-y:auto">
+    <div class="slide-header" style="margin-bottom:16px">
       <div class="accent-bar"></div>
       <h2>W26 Batch Overview</h2>
     </div>
-    <div class="cards-grid" style="margin-bottom:14px">
-      <!-- Left: 行业分布 -->
-      <div class="card">
-        <h3 style="font-size:18px;font-weight:800;color:var(--dark);margin-bottom:16px">行业分布</h3>
-        <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:16px">
-          <span style="font-size:48px;font-weight:900;color:var(--accent)">199</span>
-          <span style="font-size:14px;font-weight:600;color:var(--gray)">家公司</span>
-        </div>
-        <div class="sector-row">
-          <span class="sector-name">B2B / 企业软件</span>
-          <div class="sector-bar-wrap"><div class="sector-bar-fill" style="width:64.8%;background:var(--accent)"></div></div>
-          <span class="sector-count">129 家 · 64.8%</span>
-        </div>
-        <div class="sector-row">
-          <span class="sector-name">工业 / 硬科技</span>
-          <div class="sector-bar-wrap"><div class="sector-bar-fill" style="width:13.6%;background:#2A6BE8"></div></div>
-          <span class="sector-count">27 家 · 13.6%</span>
-        </div>
-        <div class="sector-row">
-          <span class="sector-name">医疗 / 生命科学</span>
-          <div class="sector-bar-wrap"><div class="sector-bar-fill" style="width:8%;background:#2ABE2A"></div></div>
-          <span class="sector-count">16 家 · 8.0%</span>
-        </div>
-        <div class="sector-row">
-          <span class="sector-name">金融科技</span>
-          <div class="sector-bar-wrap"><div class="sector-bar-fill" style="width:8%;background:#7B2AE8"></div></div>
-          <span class="sector-count">16 家 · 8.0%</span>
-        </div>
-        <div class="sector-row">
-          <span class="sector-name">消费者 / 游戏</span>
-          <div class="sector-bar-wrap"><div class="sector-bar-fill" style="width:3.5%;background:#E8A82A"></div></div>
-          <span class="sector-count">7 家 · 3.5%</span>
-        </div>
-        <div class="sector-row">
-          <span class="sector-name">房地产 / 建筑</span>
-          <div class="sector-bar-wrap"><div class="sector-bar-fill" style="width:1.5%;background:#999"></div></div>
-          <span class="sector-count">3 家 · 1.5%</span>
+
+    <!-- Top: Pie Chart -->
+    <div class="card" style="padding:20px 24px;margin-bottom:14px;display:flex;align-items:center;gap:32px">
+      <div style="position:relative;width:180px;height:180px;flex-shrink:0">
+        <svg viewBox="0 0 200 200" style="transform:rotate(-90deg)">
+          <!-- 底色: 非AI 10.6% -->
+          <circle cx="100" cy="100" r="80" fill="none" stroke="#d5d5d5" stroke-width="26"/>
+          <!-- Agent 应用层 44.7% = 0~44.7% (橙) -->
+          <circle cx="100" cy="100" r="80" fill="none" stroke="var(--accent)" stroke-width="26"
+            stroke-dasharray="224.8 277.9" stroke-dashoffset="0"/>
+          <!-- AI 工具 29.6% = 44.7%~74.3% (蓝) -->
+          <circle cx="100" cy="100" r="80" fill="none" stroke="#2A6BE8" stroke-width="26"
+            stroke-dasharray="148.8 353.9" stroke-dashoffset="-224.8"/>
+          <!-- Agent 基础设施 15.1% = 74.3%~89.4% (绿) -->
+          <circle cx="100" cy="100" r="80" fill="none" stroke="#2ABE2A" stroke-width="26"
+            stroke-dasharray="75.9 426.8" stroke-dashoffset="-373.6"/>
+        </svg>
+        <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center">
+          <span style="font-size:32px;font-weight:900;color:var(--dark)">199</span>
+          <span style="font-size:11px;font-weight:600;color:var(--gray)">家公司</span>
         </div>
       </div>
-      <!-- Right: 三环 donut -->
-      <div class="card" style="display:flex;flex-direction:column;align-items:center;justify-content:center">
-        <h3 style="font-size:18px;font-weight:800;color:var(--dark);margin-bottom:20px">AI / Agent / 非 AI</h3>
-        <div style="position:relative;width:200px;height:200px;margin-bottom:20px">
-          <svg viewBox="0 0 200 200" style="transform:rotate(-90deg)">
-            <!-- Non-AI: 10.1% = 背景灰 -->
-            <circle cx="100" cy="100" r="80" fill="none" stroke="#e0e0e0" stroke-width="24"/>
-            <!-- AI (non-Agent): 56.8% = 蓝色 -->
-            <circle cx="100" cy="100" r="80" fill="none" stroke="#2A6BE8" stroke-width="24"
-              stroke-dasharray="502.7" stroke-dashoffset="217.1" stroke-linecap="round"/>
-            <!-- Agent: 33.2% = 橙色 -->
-            <circle cx="100" cy="100" r="80" fill="none" stroke="var(--accent)" stroke-width="24"
-              stroke-dasharray="502.7" stroke-dashoffset="335.8" stroke-linecap="round"/>
-          </svg>
-          <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center">
-            <span style="font-size:28px;font-weight:900;color:var(--dark)">90%</span>
-            <span style="font-size:11px;font-weight:600;color:var(--gray)">AI-first</span>
+      <div style="display:flex;flex-direction:column;gap:10px;flex:1">
+        <div style="display:flex;align-items:center;gap:8px">
+          <div style="width:14px;height:14px;border-radius:3px;background:var(--accent);flex-shrink:0"></div>
+          <span style="font-size:14px;font-weight:800;color:var(--dark)">Agent 应用层</span>
+          <span style="font-size:13px;color:var(--gray)">89 家 · 45%</span>
+          <span style="font-size:11px;color:var(--gray);margin-left:auto">取代白领的主力军</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <div style="width:14px;height:14px;border-radius:3px;background:#2A6BE8;flex-shrink:0"></div>
+          <span style="font-size:14px;font-weight:800;color:var(--dark)">AI 工具与模型</span>
+          <span style="font-size:13px;color:var(--gray)">59 家 · 30%</span>
+          <span style="font-size:11px;color:var(--gray);margin-left:auto">赋能者与探索者</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <div style="width:14px;height:14px;border-radius:3px;background:#2ABE2A;flex-shrink:0"></div>
+          <span style="font-size:14px;font-weight:800;color:var(--dark)">Agent 基础设施</span>
+          <span style="font-size:13px;color:var(--gray)">30 家 · 15%</span>
+          <span style="font-size:11px;color:var(--gray);margin-left:auto">系统的卖水人</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <div style="width:14px;height:14px;border-radius:3px;background:#d5d5d5;flex-shrink:0"></div>
+          <span style="font-size:14px;font-weight:800;color:var(--dark)">非 AI / 硬核科技</span>
+          <span style="font-size:13px;color:var(--gray)">21 家 · 10%</span>
+          <span style="font-size:11px;color:var(--gray);margin-left:auto">物理与金融边界</span>
+        </div>
+        <div style="margin-top:4px;padding:6px 10px;background:#faf8f6;border-radius:6px;border-left:3px solid var(--accent)">
+          <span style="font-size:12px;font-weight:700;color:var(--dark)">Agent 经济合计 119 家（60%）</span>
+          <span style="font-size:11px;color:var(--gray)"> — 应用 + 基础设施同时成型</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom: 4 columns of bar charts -->
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px">
+      <!-- Col 1: Agent 应用层 -->
+      <div class="card" style="padding:14px 12px">
+        <h3 style="font-size:12px;font-weight:800;color:var(--accent);margin-bottom:10px">Agent 应用层 · 89 家</h3>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:2px">
+              <span style="font-size:11px;font-weight:600;color:var(--dark)">财务·法务·合规</span>
+              <span style="font-size:10px;color:var(--gray)">25%</span>
+            </div>
+            <div style="height:6px;background:#f0f0f0;border-radius:3px"><div style="height:100%;width:25%;background:var(--accent);border-radius:3px"></div></div>
+            <div style="font-size:9px;color:var(--gray);margin-top:1px">AI 会计·合同审查·审计</div>
+          </div>
+          <div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:2px">
+              <span style="font-size:11px;font-weight:600;color:var(--dark)">垂直行业运营</span>
+              <span style="font-size:10px;color:var(--gray)">20%</span>
+            </div>
+            <div style="height:6px;background:#f0f0f0;border-radius:3px"><div style="height:100%;width:20%;background:var(--accent);border-radius:3px"></div></div>
+            <div style="font-size:9px;color:var(--gray);margin-top:1px">物流·建筑·物业·设备</div>
+          </div>
+          <div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:2px">
+              <span style="font-size:11px;font-weight:600;color:var(--dark)">销售·营销·客成</span>
+              <span style="font-size:10px;color:var(--gray)">18%</span>
+            </div>
+            <div style="height:6px;background:#f0f0f0;border-radius:3px"><div style="height:100%;width:18%;background:var(--accent);border-radius:3px"></div></div>
+            <div style="font-size:9px;color:var(--gray);margin-top:1px">外呼·实时辅助·多语客服</div>
+          </div>
+          <div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:2px">
+              <span style="font-size:11px;font-weight:600;color:var(--dark)">医疗行政与临床</span>
+              <span style="font-size:10px;color:var(--gray)">12%</span>
+            </div>
+            <div style="height:6px;background:#f0f0f0;border-radius:3px"><div style="height:100%;width:12%;background:var(--accent);border-radius:3px"></div></div>
+            <div style="font-size:9px;color:var(--gray);margin-top:1px">前台·计费·预授权</div>
+          </div>
+          <div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:2px">
+              <span style="font-size:11px;font-weight:600;color:var(--dark)">IT 与系统运维</span>
+              <span style="font-size:10px;color:var(--gray)">10%</span>
+            </div>
+            <div style="height:6px;background:#f0f0f0;border-radius:3px"><div style="height:100%;width:10%;background:var(--accent);border-radius:3px"></div></div>
+            <div style="font-size:9px;color:var(--gray);margin-top:1px">Bug 修复·事故响应·QA</div>
+          </div>
+          <div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:2px">
+              <span style="font-size:11px;font-weight:600;color:var(--dark)">金融·保险·贷款</span>
+              <span style="font-size:10px;color:var(--gray)">8%</span>
+            </div>
+            <div style="height:6px;background:#f0f0f0;border-radius:3px"><div style="height:100%;width:8%;background:var(--accent);border-radius:3px"></div></div>
+            <div style="font-size:9px;color:var(--gray);margin-top:1px">贷款审批·反欺诈·商业保险</div>
+          </div>
+          <div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:2px">
+              <span style="font-size:11px;font-weight:600;color:var(--dark)">编程·自动化·办公</span>
+              <span style="font-size:10px;color:var(--gray)">7%</span>
+            </div>
+            <div style="height:6px;background:#f0f0f0;border-radius:3px"><div style="height:100%;width:7%;background:var(--accent);border-radius:3px"></div></div>
+            <div style="font-size:9px;color:var(--gray);margin-top:1px">自主编码·桌面办公·工作流</div>
           </div>
         </div>
-        <div style="display:flex;gap:20px;flex-wrap:wrap;justify-content:center">
-          <div style="display:flex;align-items:center;gap:6px">
-            <div style="width:12px;height:12px;border-radius:3px;background:var(--accent)"></div>
-            <span style="font-size:13px;font-weight:700;color:var(--dark)">Agent：66 家</span>
-            <span style="font-size:12px;color:var(--gray)">（33%）</span>
+      </div>
+
+      <!-- Col 2: AI 工具与模型 -->
+      <div class="card" style="padding:14px 12px">
+        <h3 style="font-size:12px;font-weight:800;color:#2A6BE8;margin-bottom:10px">AI 工具与模型 · 59 家</h3>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:2px">
+              <span style="font-size:11px;font-weight:600;color:var(--dark)">科学·生物·硬科技</span>
+              <span style="font-size:10px;color:var(--gray)">25%</span>
+            </div>
+            <div style="height:6px;background:#f0f0f0;border-radius:3px"><div style="height:100%;width:25%;background:#2A6BE8;border-radius:3px"></div></div>
+            <div style="font-size:9px;color:var(--gray);margin-top:1px">药物发现·数学证明·计算研究</div>
           </div>
-          <div style="display:flex;align-items:center;gap:6px">
-            <div style="width:12px;height:12px;border-radius:3px;background:#2A6BE8"></div>
-            <span style="font-size:13px;font-weight:700;color:var(--dark)">AI：113 家</span>
-            <span style="font-size:12px;color:var(--gray)">（57%）</span>
+          <div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:2px">
+              <span style="font-size:11px;font-weight:600;color:var(--dark)">金融·安全·营销</span>
+              <span style="font-size:10px;color:var(--gray)">22%</span>
+            </div>
+            <div style="height:6px;background:#f0f0f0;border-radius:3px"><div style="height:100%;width:22%;background:#2A6BE8;border-radius:3px"></div></div>
+            <div style="font-size:9px;color:var(--gray);margin-top:1px">金融建模·反诈·广告优化·CRM</div>
           </div>
-          <div style="display:flex;align-items:center;gap:6px">
-            <div style="width:12px;height:12px;border-radius:3px;background:#e0e0e0"></div>
-            <span style="font-size:13px;font-weight:700;color:var(--dark)">非 AI：20 家</span>
-            <span style="font-size:12px;color:var(--gray)">（10%）</span>
+          <div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:2px">
+              <span style="font-size:11px;font-weight:600;color:var(--dark)">创作者·游戏·内容</span>
+              <span style="font-size:10px;color:var(--gray)">20%</span>
+            </div>
+            <div style="height:6px;background:#f0f0f0;border-radius:3px"><div style="height:100%;width:20%;background:#2A6BE8;border-radius:3px"></div></div>
+            <div style="font-size:9px;color:var(--gray);margin-top:1px">AI 游戏·视频生成·社媒</div>
+          </div>
+          <div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:2px">
+              <span style="font-size:11px;font-weight:600;color:var(--dark)">物理数据·语料·硬件</span>
+              <span style="font-size:10px;color:var(--gray)">17%</span>
+            </div>
+            <div style="height:6px;background:#f0f0f0;border-radius:3px"><div style="height:100%;width:17%;background:#2A6BE8;border-radius:3px"></div></div>
+            <div style="font-size:9px;color:var(--gray);margin-top:1px">运动数据·视频库·笔记设备</div>
+          </div>
+          <div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:2px">
+              <span style="font-size:11px;font-weight:600;color:var(--dark)">机器人·自动驾驶</span>
+              <span style="font-size:10px;color:var(--gray)">8%</span>
+            </div>
+            <div style="height:6px;background:#f0f0f0;border-radius:3px"><div style="height:100%;width:8%;background:#2A6BE8;border-radius:3px"></div></div>
+            <div style="font-size:9px;color:var(--gray);margin-top:1px">操控模型·仿真·雷达</div>
+          </div>
+          <div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:2px">
+              <span style="font-size:11px;font-weight:600;color:var(--dark)">开发者·代码工具</span>
+              <span style="font-size:10px;color:var(--gray)">8%</span>
+            </div>
+            <div style="height:6px;background:#f0f0f0;border-radius:3px"><div style="height:100%;width:8%;background:#2A6BE8;border-radius:3px"></div></div>
+            <div style="font-size:9px;color:var(--gray);margin-top:1px">编码环境·低代码·工作流</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Col 3: Agent 基础设施 -->
+      <div class="card" style="padding:14px 12px">
+        <h3 style="font-size:12px;font-weight:800;color:#2ABE2A;margin-bottom:10px">Agent 基础设施 · 30 家</h3>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:2px">
+              <span style="font-size:11px;font-weight:600;color:var(--dark)">安全·权限·防注入</span>
+              <span style="font-size:10px;color:var(--gray)">27%</span>
+            </div>
+            <div style="height:6px;background:#f0f0f0;border-radius:3px"><div style="height:100%;width:27%;background:#2ABE2A;border-radius:3px"></div></div>
+            <div style="font-size:9px;color:var(--gray);margin-top:1px">身份绑定·数据防火墙·护栏</div>
+          </div>
+          <div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:2px">
+              <span style="font-size:11px;font-weight:600;color:var(--dark)">部署·编排·开发者</span>
+              <span style="font-size:10px;color:var(--gray)">27%</span>
+            </div>
+            <div style="height:6px;background:#f0f0f0;border-radius:3px"><div style="height:100%;width:27%;background:#2ABE2A;border-radius:3px"></div></div>
+            <div style="font-size:9px;color:var(--gray);margin-top:1px">UI 组件·托管调度·API 转换</div>
+          </div>
+          <div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:2px">
+              <span style="font-size:11px;font-weight:600;color:var(--dark)">监控·评估·测试</span>
+              <span style="font-size:10px;color:var(--gray)">17%</span>
+            </div>
+            <div style="height:6px;background:#f0f0f0;border-radius:3px"><div style="height:100%;width:17%;background:#2ABE2A;border-radius:3px"></div></div>
+            <div style="font-size:9px;color:var(--gray);margin-top:1px">幻觉检测·行为仿真·QA</div>
+          </div>
+          <div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:2px">
+              <span style="font-size:11px;font-weight:600;color:var(--dark)">算力·推理优化</span>
+              <span style="font-size:10px;color:var(--gray)">17%</span>
+            </div>
+            <div style="height:6px;background:#f0f0f0;border-radius:3px"><div style="height:100%;width:17%;background:#2ABE2A;border-radius:3px"></div></div>
+            <div style="font-size:9px;color:var(--gray);margin-top:1px">GPU 推理·端侧部署·压缩</div>
+          </div>
+          <div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:2px">
+              <span style="font-size:11px;font-weight:600;color:var(--dark)">支付·数据上下文</span>
+              <span style="font-size:10px;color:var(--gray)">12%</span>
+            </div>
+            <div style="height:6px;background:#f0f0f0;border-radius:3px"><div style="height:100%;width:12%;background:#2ABE2A;border-radius:3px"></div></div>
+            <div style="font-size:9px;color:var(--gray);margin-top:1px">Agent 钱包·API 支付</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Col 4: 非 AI -->
+      <div class="card" style="padding:14px 12px">
+        <h3 style="font-size:12px;font-weight:800;color:#888;margin-bottom:10px">非 AI / 硬核科技 · 21 家</h3>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:2px">
+              <span style="font-size:11px;font-weight:600;color:var(--dark)">Fintech·支付·加密</span>
+              <span style="font-size:10px;color:var(--gray)">40%</span>
+            </div>
+            <div style="height:6px;background:#f0f0f0;border-radius:3px"><div style="height:100%;width:40%;background:#aaa;border-radius:3px"></div></div>
+            <div style="font-size:9px;color:var(--gray);margin-top:1px">跨链存款·注意力交易所</div>
+          </div>
+          <div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:2px">
+              <span style="font-size:11px;font-weight:600;color:var(--dark)">物理·能源·制造</span>
+              <span style="font-size:10px;color:var(--gray)">35%</span>
+            </div>
+            <div style="height:6px;background:#f0f0f0;border-radius:3px"><div style="height:100%;width:35%;background:#aaa;border-radius:3px"></div></div>
+            <div style="font-size:9px;color:var(--gray);margin-top:1px">潜水装备·脱网数据中心·雷达</div>
+          </div>
+          <div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:2px">
+              <span style="font-size:11px;font-weight:600;color:var(--dark)">航天·太空工业</span>
+              <span style="font-size:10px;color:var(--gray)">25%</span>
+            </div>
+            <div style="height:6px;background:#f0f0f0;border-radius:3px"><div style="height:100%;width:25%;background:#aaa;border-radius:3px"></div></div>
+            <div style="font-size:9px;color:var(--gray);margin-top:1px">月球基建·太空电池·太阳能阵列</div>
           </div>
         </div>
       </div>
     </div>
+
     <!-- Insight box -->
-    <div class="insight-box">
+    <div class="insight-box" style="margin-top:10px">
       <span class="insight-label">核心观点</span>
-      <span class="insight-text">这一届 90% 是 AI 公司，其中 1/3 直接做 Agent。和上一届最大的区别：它们不再说"辅助"，而是说"替代"——从 Copilot 到 Full Autopilot。</span>
+      <span class="insight-text">Agent 经济占 60%（应用 45% + 基础设施 15%），大部分使用了 replace / autonomous / autopilot 等"替代"叙事。</span>
+    </div>
+  </div>
+
+  <!-- 数据总结 + 趋势引出 -->
+  <div class="slide slide-content" data-index="4" style="padding:40px 70px">
+    <div class="slide-header" style="margin-bottom:24px">
+      <div class="accent-bar"></div>
+      <h2>从数据中看到了什么</h2>
+    </div>
+
+    <!-- 三条结论 -->
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:20px">
+      <div class="card" style="padding:20px;border-top:3px solid var(--accent)">
+        <h3 style="font-size:14px;font-weight:800;color:var(--accent);margin-bottom:8px">规则密集的岗位先被替代</h3>
+        <p style="font-size:12px;color:var(--gray);line-height:1.7">Agent 应用层里，财务·法务·合规占比最高（25%）。最先被接管的不是最"高级"的岗位，而是有标准流程、有明确对错的工作。</p>
+      </div>
+      <div class="card" style="padding:20px;border-top:3px solid #2ABE2A">
+        <h3 style="font-size:14px;font-weight:800;color:#2ABE2A;margin-bottom:8px">瓶颈在安全和部署，不在模型</h3>
+        <p style="font-size:12px;color:var(--gray);line-height:1.7">基础设施层里，安全权限 + 部署编排占 54%。Agent 落地最大的卡点是"谁允许它做什么"和"它在哪跑"。</p>
+      </div>
+      <div class="card" style="padding:20px;border-top:3px solid #2A6BE8">
+        <h3 style="font-size:14px;font-weight:800;color:#2A6BE8;margin-bottom:8px">替代劳动力 vs 创造新能力</h3>
+        <p style="font-size:12px;color:var(--gray);line-height:1.7">Agent 层集中在传统白领岗位（会计、律师、客服），AI 工具层集中在前沿领域（药物发现、数学证明、机器人）。两层逻辑完全不同。</p>
+      </div>
+    </div>
+
+    <!-- AI Native Agency 观察 -->
+    <div class="card" style="padding:20px 24px;margin-bottom:20px;border-left:4px solid var(--accent)">
+      <h3 style="font-size:14px;font-weight:800;color:var(--dark);margin-bottom:8px">一个有意思的观察：AI Native Agency 去哪了？</h3>
+      <p style="font-size:13px;color:var(--gray);line-height:1.8">YC 2026 春季 RFS 专门写了 AI Native Agencies——"未来的 agency 拥有软件级利润率"。但 199 家里几乎找不到一家自称 "AI agency"。<br><br>因为做对了的公司不用这个词。General Legal 用 AI 交付法律服务，但叫自己 "AI native law firm"；Balance 本质是 AI 会计事务所，但定位是 "full-stack AI accounting"。<strong>RFS 描述的未来已经在这批公司里了——藏在 Agent 应用层的 45% 里。</strong></p>
+    </div>
+
+    <!-- 趋势引出 -->
+    <div class="insight-box">
+      <span class="insight-label">接下来</span>
+      <span class="insight-text">从这 199 家公司中提炼了 5 个趋势：Copilot→Replacement · 基础设施>应用 · 垂直AI吃掉SaaS · 医疗成最大垂直 · Consumer极度稀缺但流量最高</span>
     </div>
   </div>
 
   <!-- ==================== SECTION 02: 一些趋势 ==================== -->
 
-  <div class="slide slide-section" data-index="4">
+  <div class="slide slide-section" data-index="5">
     <span class="section-num">02</span>
     <h2>一些趋势</h2>
     <p>从 199 家公司中观察到的一些方向性信号</p>
   </div>
 
   <!-- 趋势 1: Copilot → Replacement -->
-  <div class="slide slide-content" data-index="5" style="padding:32px 60px;overflow-y:auto">
+  <div class="slide slide-content" data-index="6" style="padding:32px 60px;overflow-y:auto">
     <div class="slide-header" style="margin-bottom:16px">
       <div class="accent-bar"></div>
       <h2>Trend 1：Copilot → Replacement</h2>
@@ -364,10 +590,10 @@
               <span class="project-name">Cardinal</span>
               <span class="project-tag-sm">Sales</span>
             </div>
-            <p class="project-oneliner">AI 销售代表负责外呼，已为 40+ 家 YC 公司提供出站营销</p>
+            <p class="project-oneliner">AI 销售代表，自主完成线索筛选→外呼→跟进全流程，已服务 40+ 家 YC 公司</p>
           </div>
           <div class="project-detail">
-            <p class="project-desc">不是给销售员做辅助工具，而是直接替代——AI 自主完成从线索筛选到外呼到跟进的全流程。Pitch 直接写"AI sales rep"。</p>
+            <p class="project-desc">单客户贡献 $70K 已签收入。整合原本需 10 个工具的工作流，按完成量收费。<br><strong>创始人：</strong>2x YC founders（上一家 Leafpress 被 Johnson Controls 收购），Harvard CS + MIT CS，Forbes 30 Under 30。</p>
           </div>
         </div>
       </div>
@@ -378,10 +604,10 @@
               <span class="project-name">IncidentFox</span>
               <span class="project-tag-sm">DevOps</span>
             </div>
-            <p class="project-oneliner">AI SRE 工程师，独自修复生产事故——420+ GitHub stars，部署 < 1 天</p>
+            <p class="project-oneliner">AI SRE 工程师，从告警到根因分析到修复全自动——497 GitHub stars，开源核心</p>
           </div>
           <div class="project-detail">
-            <p class="project-desc">连接 Sentry/Datadog，像内部工程师一样修复事故。300+ 集成，SOC 2 合规。DevOps 80% 的时间花在定位问题而非修复——AI 直接消灭这个瓶颈。</p>
+            <p class="project-desc">40+ 集成（Datadog/PagerDuty/K8s/AWS 等），全程在 Slack 内完成，SOC 2 审计中。凌晨告警→AI 自动排查→你醒来点"Approve"即修复。<br><strong>创始人：</strong>Ex-Meta/Roblox 基础设施工程师，Cornell/Brandeis，从 on-call 痛点出发造产品。</p>
           </div>
         </div>
       </div>
@@ -392,10 +618,10 @@
               <span class="project-name">Balance / FullSeam</span>
               <span class="project-tag-sm">Accounting</span>
             </div>
-            <p class="project-oneliner">AI 会计师无需人工干预完成结账——$680B 会计服务市场，80% 仍用 Excel</p>
+            <p class="project-oneliner">Balance：SMB 的 AI 会计事务所 / FullSeam：企业财务团队的 AI 助理</p>
           </div>
           <div class="project-detail">
-            <p class="project-desc">Balance 做全栈 AI 会计，FullSeam 做自动化记账。30 万 CPA 正在流失，AI 会计员工让每人收入提升 39%。不是 copilot，是"虚拟会计事务所"。</p>
+            <p class="project-desc">Balance 实时记账+AI 助手"Bea"（Slack/WhatsApp 问答），人类会计师最终审核。FullSeam 插入现有 ERP 接管 AP/AR，几天部署。<br><strong>创始人：</strong>Balance 团队含前 YC CFO + McKinsey + Oxford AI 研究员；FullSeam 为 2x YC founders（上一家被 Opendoor 8 位数收购）。</p>
           </div>
         </div>
       </div>
@@ -408,10 +634,10 @@
               <span class="project-name">General Legal</span>
               <span class="project-tag-sm">Legal</span>
             </div>
-            <p class="project-oneliner">完全由模型组成的 AI 律所</p>
+            <p class="project-oneliner">AI 原生律所——律师穿上 AI"外骨骼"，合同审查 1 小时交付</p>
           </div>
           <div class="project-detail">
-            <p class="project-desc">不是法律辅助工具，而是一个没有人类律师的律所。AI 完成从案件分析到文件起草到合规审查的全流程。</p>
+            <p class="project-desc">持牌律师 + AI 工作流混合模式，效率 ~10x 传统律所。固定费率 $500/合同（传统 $1K-$5K）。成立不到一个月 20+ 家客户。<br><strong>创始人：</strong>三位均 Harvard Law + 资深工程师，前 Casetext CTO（被 Thomson Reuters $650M 收购）+ 前 Cooley/Fenwick 执业律师。</p>
           </div>
         </div>
       </div>
@@ -422,10 +648,10 @@
               <span class="project-name">Copperlane</span>
               <span class="project-tag-sm">Lending</span>
             </div>
-            <p class="project-oneliner">AI 抵押贷款专员——替代人类贷款经纪人</p>
+            <p class="project-oneliner">AI 贷款收单员"Penny"——接管 intake 环节，秒级文档预审核</p>
           </div>
           <div class="project-detail">
-            <p class="project-desc">从申请受理到资质审核到利率推荐，全流程 AI 处理。金融科技彻底变形：假设 AI Agent 是首要用户，而非人类。</p>
+            <p class="project-desc">自动催件、资格校验、答疑，将完整文件包交给人类 LO 做 closing。美国单笔贷款发起成本 ~$12K，大部分烧在 intake。<br><strong>创始人：</strong>Princeton CS 前量化开发 + UPenn M&T 前 Jefferies/Jane Street。两人均来自 mortgage families（父母在 Freddie Mac/Fannie Mae 工作）。</p>
           </div>
         </div>
       </div>
@@ -434,49 +660,94 @@
           <div class="project-mini">
             <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
               <span class="project-name">Patientdesk.ai</span>
-              <span class="project-tag-sm">Healthcare</span>
+              <span class="project-tag-sm">Dental</span>
             </div>
-            <p class="project-oneliner">AI 语音 Agent 处理每通患者电话——8 周内 $17K → $50K 月收入</p>
+            <p class="project-oneliner">牙科诊所 AI 全职前台——8 周内 $17K → $50K MRR，60+ 家诊所</p>
           </div>
           <div class="project-detail">
-            <p class="project-desc">60+ 家诊所已部署。不是帮前台接电话，而是直接成为前台。</p>
+            <p class="project-desc">24/7 接线、实时保险核审（杀手锏）、催款、广告线索 10 秒跟进。为客户带来 $1.8M 增量收入，替代 $15K/月工具栈。<br><strong>创始人：</strong>三位土耳其裔，均为全国 120 万考生中第 1 名，此前运营过牙科营销机构和呼叫中心。</p>
           </div>
         </div>
       </div>
     </div>
     <div class="insight-box">
-      <span class="insight-label">共同特征</span>
-      <span class="insight-text">Cardinal 替法律团队写合规文件，IncidentFox 替消防队写事故报告，FullSeam 替物业管理公司处理租客请求。共同点：瞄准的都是重复性高、人力成本占大头的岗位，按完成量收费。</span>
+      <span class="insight-label">一些总结</span>
+      <span class="insight-text">创始人全是"自己人"——开过会计所、开过呼叫中心、做过执业律师。定价从 per-seat 变成 per-outcome，客户一眼算得清。"人在回路"在受监管行业是壁垒不是短板。</span>
     </div>
   </div>
 
   <!-- 趋势 2: 基础设施 > 应用 -->
-  <div class="slide slide-content" data-index="6" style="padding:32px 60px;overflow-y:auto">
+  <div class="slide slide-content" data-index="7" style="padding:32px 60px;overflow-y:auto">
     <div class="slide-header" style="margin-bottom:16px">
       <div class="accent-bar"></div>
       <h2>Trend 2：基础设施 > 应用</h2>
     </div>
-    <p class="trend-thesis">"当一个新类别的软件需要身份、安全、监控和支付时，你就知道它是真的了。" — Chris Lu</p>
+    <p class="trend-thesis">当一个新品类需要身份、安全、监控和支付时，说明它是真的——W26 有 30 家在造 Agent 经济的基础设施层。</p>
     <div class="card" style="padding:20px 24px;margin-bottom:14px">
-      <h3 style="font-size:15px;font-weight:800;color:var(--dark);margin-bottom:12px">Agent 经济正在复制云计算的基础设施分层</h3>
-      <table class="compare-table">
+      <h3 style="font-size:15px;font-weight:800;color:var(--dark);margin-bottom:12px">Agent 经济正在复制云计算的基础设施分层 <span style="font-size:11px;font-weight:500;color:var(--gray);margin-left:8px">点击行展开详情 ↓</span></h3>
+      <table class="compare-table expandable-table">
         <tr><th>云时代</th><th>Agent 时代</th><th>做什么</th></tr>
-        <tr><td>Okta</td><td><strong>Agentic Fabriq / Didit</strong></td><td>身份验证——Didit 50.5 万月访问，90% 留存</td></tr>
-        <tr><td>Datadog</td><td><strong>Sentrial / Moda</strong></td><td>监控——检测 Agent 幻觉、循环和偷懒模式</td></tr>
-        <tr><td>Snyk</td><td><strong>Salus / Cascade</strong></td><td>护栏——执行前验证 Agent 行动是否安全合规</td></tr>
-        <tr><td>Stripe</td><td><strong>Sponge</strong></td><td>支付——让 AI Agent 持有和花费资金（3x Stripe Crypto 工程师创办）</td></tr>
-        <tr><td>Vercel</td><td><strong>Terminal Use</strong></td><td>部署——后台 Agent 的编排平台</td></tr>
-        <tr><td>Scale AI</td><td><strong>Luel</strong></td><td>数据——权利清晰的多模态训练数据（19 岁 CEO，190K 贡献者）</td></tr>
+        <tr class="expandable-row" tabindex="0">
+          <td>Okta</td><td><strong>Agentic Fabriq / Didit</strong></td><td>身份验证——Didit 50.5 万月访问，90% 留存</td>
+        </tr>
+        <tr class="expand-detail"><td colspan="3">
+          <div class="expand-content">
+            <div class="expand-company"><strong>Agentic Fabriq</strong> — Agent 只能继承操作员工权限，动作执行前实时拦截，所有操作集中审计。<span class="expand-founder">创始人：Paulina & Matthew Xu，MIT AI 大二辍学，新生周末认识→共同创业。</span></div>
+            <div class="expand-company"><strong>Didit</strong> — 全栈自研 KYC：3 秒活体检测+证件扫描+反洗钱+NFC 护照芯片。降维定价：500 次/月免费，按次付费无合同。6 个月 NRR 300%+。<span class="expand-founder">创始人：Alberto & Alejandro Rosas，同卵双胞胎+前职业网球选手。灵感："一辈子互相冒充对方"。</span></div>
+          </div>
+        </td></tr>
+        <tr class="expandable-row" tabindex="0">
+          <td>Datadog</td><td><strong>Sentrial / Moda</strong></td><td>监控——检测 Agent 幻觉、循环和偷懒模式</td>
+        </tr>
+        <tr class="expand-detail"><td colspan="3">
+          <div class="expand-content">
+            <div class="expand-company"><strong>Sentrial</strong> — 语义级故障检测：实时识别幻觉、工具误调用、用户情绪异常，自动根因诊断到具体 Prompt 漏洞。定价 $10-$450/月。<span class="expand-founder">创始人：UC Berkeley CS，在 Sense/Accenture 部署 Agent 时发现传统监控完全失效。</span></div>
+            <div class="expand-company"><strong>Moda</strong> — 专治"看起来没崩但其实很蠢"：虚假承诺、偷懒、健忘检测；自然语言定义监控规则；修复回放验证。<span class="expand-founder">创始人：滑铁卢辍学，曾在 Shopify/Notion 构建 AI 基础设施。</span></div>
+          </div>
+        </td></tr>
+        <tr class="expandable-row" tabindex="0">
+          <td>Snyk</td><td><strong>Salus</strong></td><td>护栏——执行前验证 Agent 行动是否安全合规，58% 错误可自动修复</td>
+        </tr>
+        <tr class="expand-detail"><td colspan="3">
+          <div class="expand-content">
+            <div class="expand-company"><strong>Salus</strong> — 运行时安全层：Agent 没查订单就要退款？直接封锁。自然语言定义业务规则→编译为实时检查。跨 12 个前沿模型减少 52% 行为偏差。<span class="expand-founder">创始人：Kevin Pan & Vedant Singh，Stanford CS 室友。</span></div>
+          </div>
+        </td></tr>
+        <tr class="expandable-row" tabindex="0">
+          <td>Stripe</td><td><strong>Sponge</strong></td><td>支付——让 AI Agent 持有和花费资金（3x Stripe Crypto 工程师创办）</td>
+        </tr>
+        <tr class="expand-detail"><td colspan="3">
+          <div class="expand-content">
+            <div class="expand-company"><strong>Sponge</strong> — Agent 钱包+虚拟信用卡+加密钱包；商家"无代码"对接 Agent；硬性支出控制（日预算/单笔上限/域名白名单）。交易手续费模式。<span class="expand-founder">创始人：Eric Zhang / Jae Choi / Rishab Luthra，全员 Ex-Stripe Crypto，亲手构建过稳定币账户和资金流动系统。</span></div>
+          </div>
+        </td></tr>
+        <tr class="expandable-row" tabindex="0">
+          <td>Vercel</td><td><strong>Terminal Use</strong></td><td>部署——后台 Agent 的编排平台</td>
+        </tr>
+        <tr class="expand-detail"><td colspan="3">
+          <div class="expand-content">
+            <div class="expand-company"><strong>Terminal Use</strong> — Docker 隔离环境、filesystem forking 并行实验、消息 SDK 实时流式传输、Git 式回滚。内部用 actor-critique loop 多 Agent 并行写代码，选最优方案。<span class="expand-founder">创始人：3x Ex-Palantir。Vivek Raja 领导过美国医院系统最大 Agent 落地案例。在 Palantir 踩过的坑直接产品化。</span></div>
+          </div>
+        </td></tr>
+        <tr class="expandable-row" tabindex="0">
+          <td>Scale AI</td><td><strong>Luel / Cascade</strong></td><td>数据与进化——Luel 提供训练数据，Cascade 从生产数据持续优化 Agent</td>
+        </tr>
+        <tr class="expand-detail"><td colspan="3">
+          <div class="expand-content">
+            <div class="expand-company"><strong>Luel</strong> — 190K 全球贡献者，数日内交付定制多模态数据集（南亚医患对话、宝石加工画面等），每条附完整版权审计链。公网数据已刮完，合规真实数据是下一代模型的瓶颈。<span class="expand-founder">创始人：William Namgyal & Inigo Lenderking，伯克利辍学。</span></div>
+            <div class="expand-company"><strong>Cascade</strong> — 实时捕捉 Agent 推理步骤和结果，自动训练业务逻辑评估器，闭环反馈改进 Prompt/微调模型。让 Agent 越来越懂公司潜规则。<span class="expand-founder">创始人：UC Berkeley BAIR Lab，放弃 PhD + 名企 return offer 创业。</span></div>
+          </div>
+        </td></tr>
       </table>
     </div>
     <div class="insight-box">
-      <span class="insight-label">历史规律</span>
-      <span class="insight-text">W26 有 28 家在做 Agent 经济的基础设施——身份、监控、支付、安全、数据。</span>
+      <span class="insight-label">一些总结</span>
+      <span class="insight-text">30 家基建里数据最亮的两家——Didit（身份验证，1000+ 客户）和 Luel（训练数据，6 周 ~$2M ARR）——赚的都不是"给 agent 服务"的钱，而是今天就存在的需求。直接服务 agent 的基建大多还在早期。</span>
     </div>
   </div>
 
   <!-- 趋势 3: 垂直 AI 吃掉 SaaS -->
-  <div class="slide slide-content" data-index="7" style="padding:32px 60px;overflow-y:auto">
+  <div class="slide slide-content" data-index="8" style="padding:32px 60px;overflow-y:auto">
     <div class="slide-header" style="margin-bottom:16px">
       <div class="accent-bar"></div>
       <h2>Trend 3：垂直 AI 吃掉 SaaS</h2>
@@ -498,40 +769,70 @@
       </div>
     </div>
     <div class="insight-box">
-      <span class="insight-label">壁垒在哪</span>
+      <span class="insight-label">一些总结</span>
       <span class="insight-text">Aurorin 被 SpaceX 用，REV1 被 Tesla 试，Avoice 进了建筑合规流程。每个领域都有自己的"语言"——CAD 公差、建筑规范、RTL 设计规则——这些是通用模型碰不到的。</span>
     </div>
   </div>
 
   <!-- 趋势 4: 医疗成最大垂直 -->
-  <div class="slide slide-content" data-index="8" style="padding:32px 60px;overflow-y:auto">
+  <div class="slide slide-content" data-index="9" style="padding:32px 60px;overflow-y:auto">
     <div class="slide-header" style="margin-bottom:16px">
       <div class="accent-bar"></div>
       <h2>Trend 4：医疗成最大垂直赛道</h2>
     </div>
-    <p class="trend-thesis">W26 有 22-23 家医疗公司，远超其他垂直赛道。行政和临床两条路线都在同时起量。</p>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px">
+    <p class="trend-thesis">W26 有 22 家医疗公司，远超其他垂直赛道。横跨 5 个子赛道，行政和临床两条路线同时起量。</p>
+    <!-- 子赛道统计 -->
+    <div class="card" style="padding:14px 20px;margin-bottom:12px">
+      <div style="display:flex;gap:0;justify-content:space-between">
+        <div style="flex:1;text-align:center;border-right:1px solid #f0f0f0;padding:4px 0">
+          <div style="font-size:11px;color:var(--gray);margin-bottom:2px">运营/计费</div>
+          <div style="font-size:22px;font-weight:900;color:#2ABE2A">5</div>
+          <div style="font-size:9px;color:var(--gray)">Patientdesk 等</div>
+        </div>
+        <div style="flex:1;text-align:center;border-right:1px solid #f0f0f0;padding:4px 0">
+          <div style="font-size:11px;color:var(--gray);margin-bottom:2px">语言/沟通/基建</div>
+          <div style="font-size:22px;font-weight:900;color:#2ABE2A">6</div>
+          <div style="font-size:9px;color:var(--gray)">Samora AI 等</div>
+        </div>
+        <div style="flex:1;text-align:center;border-right:1px solid #f0f0f0;padding:4px 0">
+          <div style="font-size:11px;color:var(--gray);margin-bottom:2px">临床/诊疗</div>
+          <div style="font-size:22px;font-weight:900;color:#7B2AE8">4</div>
+          <div style="font-size:9px;color:var(--gray)">CellType 等</div>
+        </div>
+        <div style="flex:1;text-align:center;border-right:1px solid #f0f0f0;padding:4px 0">
+          <div style="font-size:11px;color:var(--gray);margin-bottom:2px">药物发现/生科</div>
+          <div style="font-size:22px;font-weight:900;color:#7B2AE8">4</div>
+          <div style="font-size:9px;color:var(--gray)">Origin 等</div>
+        </div>
+        <div style="flex:1;text-align:center;padding:4px 0">
+          <div style="font-size:11px;color:var(--gray);margin-bottom:2px">监管合规</div>
+          <div style="font-size:22px;font-weight:900;color:#7B2AE8">3</div>
+          <div style="font-size:9px;color:var(--gray)">Ritivel 等</div>
+        </div>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:12px">
       <div class="card" style="padding:20px;border-top:3px solid #2ABE2A">
-        <h3 style="font-size:15px;font-weight:800;color:#2ABE2A;margin-bottom:10px">行政先行（低风险、快变现）</h3>
+        <h3 style="font-size:15px;font-weight:800;color:#2ABE2A;margin-bottom:10px">行政侧 · 11 家</h3>
         <div class="bullet"><div class="dot" style="background:#2ABE2A"></div><div><h4>Patientdesk.ai</h4><p>AI 语音处理患者电话，8 周 $17K→$50K 月收入，60+ 诊所已部署</p></div></div>
         <div class="bullet"><div class="dot" style="background:#2ABE2A"></div><div><h4>Overdrive Health</h4><p>AI 医疗计费取代整个营收周期团队</p></div></div>
         <div class="bullet"><div class="dot" style="background:#2ABE2A"></div><div><h4>ClaimGlide / Ruma Care</h4><p>AI 自动预授权和生物制剂处方加速</p></div></div>
       </div>
       <div class="card" style="padding:20px;border-top:3px solid #7B2AE8">
-        <h3 style="font-size:15px;font-weight:800;color:#7B2AE8;margin-bottom:10px">临床突破（高壁垒、强护城河）</h3>
+        <h3 style="font-size:15px;font-weight:800;color:#7B2AE8;margin-bottom:10px">临床侧 · 11 家</h3>
         <div class="bullet"><div class="dot" style="background:#7B2AE8"></div><div><h4>CellType</h4><p>AI 代理运行完整药物发现——Google CEO 背书，270B 参数基础模型</p></div></div>
         <div class="bullet"><div class="dot" style="background:#7B2AE8"></div><div><h4>Mango Medical</h4><p>CT 扫描生成 AI 手术规划——$10M 年收入意向函，唯一申请 FDA 的 W26 公司</p></div></div>
         <div class="bullet"><div class="dot" style="background:#7B2AE8"></div><div><h4>Mantis</h4><p>人体数字孪生——物理仿真 + 大模型做人体数据</p></div></div>
       </div>
     </div>
     <div class="insight-box">
-      <span class="insight-label">两条路径</span>
-      <span class="insight-text">两条路径分化明显：行政侧（Patientdesk、Aplos）落地快、回款快；临床侧（CellType、Mango）周期长但壁垒高。</span>
+      <span class="insight-label">一些总结</span>
+      <span class="insight-text">行政侧（运营 + 沟通 = 11 家）落地快、回款快；临床侧（诊疗 + 药物 + 合规 = 11 家）周期长但壁垒高。两条路线几乎各占一半。</span>
     </div>
   </div>
 
   <!-- 趋势 5: Consumer 稀缺但流量最高 + 硬件 -->
-  <div class="slide slide-content" data-index="9" style="padding:32px 60px;overflow-y:auto">
+  <div class="slide slide-content" data-index="10" style="padding:32px 60px;overflow-y:auto">
     <div class="slide-header" style="margin-bottom:16px">
       <div class="accent-bar"></div>
       <h2>Trend 5：Consumer 极度稀缺但流量最高</h2>
@@ -561,21 +862,21 @@
       </div>
     </div>
     <div class="insight-box">
-      <span class="insight-label">品类洞察</span>
-      <span class="insight-text">跑出来的都不是"给现有产品加 AI"，而是用 AI 造了新品类。Pax Historia 做"AI 架空历史游戏"拿到 360 万月访问，Pocket 做"随身 AI 笔记硬件"跑到 $27M ARR。</span>
+      <span class="insight-label">一些总结</span>
+      <span class="insight-text">品类创新 > 功能创新——跑出来的都不是"给 X 加 AI"，而是创造了新品类。硬件反而最有 traction（Pocket $27M ARR）。93% 创业者在 B2B，Consumer 竞争最小、alpha 最大。</span>
     </div>
   </div>
 
   <!-- ==================== SECTION 03: 关注酷的东西 ==================== -->
 
-  <div class="slide slide-section" data-index="10">
+  <div class="slide slide-section" data-index="11">
     <span class="section-num">03</span>
     <h2>关注一切酷、叛逆的东西</h2>
     <p>Z 世代的「情绪消费」正在创造全新品类</p>
   </div>
 
   <!-- SHIT + Consumer thesis -->
-  <div class="slide slide-content" data-index="11" style="padding:32px 60px;overflow-y:auto">
+  <div class="slide slide-content" data-index="12" style="padding:32px 60px;overflow-y:auto">
     <div class="slide-header" style="margin-bottom:20px">
       <div class="accent-bar"></div>
       <h2>Gen-Z 的认真式荒诞</h2>
@@ -611,14 +912,14 @@
 
   <!-- ==================== SECTION 04: 有趣的项目与人 ==================== -->
 
-  <div class="slide slide-section" data-index="12">
+  <div class="slide slide-section" data-index="13">
     <span class="section-num">04</span>
     <h2>有趣的项目与人</h2>
     <p>值得持续跟踪的公司和创始人</p>
   </div>
 
   <!-- 有意思的项目 -->
-  <div class="slide slide-content" data-index="13" style="padding:32px 60px;overflow-y:auto">
+  <div class="slide slide-content" data-index="14" style="padding:32px 60px;overflow-y:auto">
     <div class="slide-header" style="margin-bottom:16px">
       <div class="accent-bar"></div>
       <h2>有意思的项目</h2>
@@ -782,7 +1083,7 @@
   </div>
 
   <!-- 有意思的创始人 -->
-  <div class="slide slide-content" data-index="14" style="padding:32px 60px;overflow-y:auto">
+  <div class="slide slide-content" data-index="15" style="padding:32px 60px;overflow-y:auto">
     <div class="slide-header" style="margin-bottom:16px">
       <div class="accent-bar"></div>
       <h2>有意思的创始人</h2>
@@ -988,6 +1289,23 @@
   });
 
   document.getElementById('total').textContent = slides.length;
+
+  // Expandable table rows
+  document.querySelectorAll('.expandable-row').forEach(row => {
+    row.addEventListener('click', () => {
+      const detail = row.nextElementSibling;
+      const isOpen = row.classList.contains('open');
+      // Close all others in same table
+      row.closest('table').querySelectorAll('.expandable-row.open').forEach(r => {
+        r.classList.remove('open');
+        r.nextElementSibling.classList.remove('open');
+      });
+      if (!isOpen) {
+        row.classList.add('open');
+        detail.classList.add('open');
+      }
+    });
+  });
 </script>
 
 </body>
